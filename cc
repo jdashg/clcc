@@ -7,7 +7,7 @@ import subprocess
 import sys
 
 
-args = ['cl']
+args = ['cl', '-nologo']
 for x in sys.argv[1:]:
     if x == '-H':
         args.append('-showIncludes')
