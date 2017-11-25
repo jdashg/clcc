@@ -28,7 +28,6 @@ except KeyError:
     CL_ENV['LIB'] = LIB
 
 CL_DIR = os.path.dirname(cl_path)
-print(CL_DIR)
 
 def run(args):
     args[0] = os.path.join(CL_DIR, args[0])
