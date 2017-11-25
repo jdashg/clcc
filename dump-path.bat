@@ -1,2 +1,4 @@
 @echo off
-where cl > .cl-path.txt
+echo %INCLUDE% > .cl-path.txt
+echo %LIB% >> .cl-path.txt
+where cl >> .cl-path.txt

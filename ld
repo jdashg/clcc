@@ -7,8 +7,8 @@ import subprocess
 import sys
 
 
-args = [clcc.path('link')]
+args = ['link']
 for x in sys.argv[1:]:
     args.append(x)
 
-exit(subprocess.run(args).returncode)
+exit(clcc.run(args))

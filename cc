@@ -7,7 +7,7 @@ import subprocess
 import sys
 
 
-args = [clcc.path('cl')]
+args = ['cl']
 for x in sys.argv[1:]:
     if x == '-H':
         args.append('-showIncludes')
@@ -15,4 +15,4 @@ for x in sys.argv[1:]:
 
     args.append(x)
 
-exit(subprocess.run(args).returncode)
+exit(clcc.run(args))
