@@ -1,20 +1,30 @@
-# python3
-assert __name__ != '__main__'
+#!/usr/bin/env python3
 
 import os
+import pathlib
 import subprocess
+import sys
 
-try:
-    cl_path_path = os.path.join(os.path.dirname(__file__), '.cl-path.txt')
-    with open(cl_path_path, 'r') as f:
-        INCLUDE = f.readline()
-        LIB = f.readline()
-        cl_path = f.readline()
-except FileNotFoundError:
+
+def exit_missing_file(path):
+    print('File not found: {}'.format(path))
     print('Run `dump-path.bat` from the desired "Tools Command Prompt".')
     print('(You probably want "x64 Native Tools Command Prompt for VR 2017")')
     exit(1)
 
+
+try:
+    dump_file = pathlib.Path(__file__).parent / '.cl-path.txt'
+    data = dump_file.read_text()
+
+except FileNotFoundError:
+    import traceback
+    traceback.print_exc()
+    exit_missing_file(cl_path)
+
+
+data = [x for x in data.split('\n') if x]
+(INCLUDE, LIB, cl_path) = data
 
 CL_ENV = dict(os.environ)
 try:
@@ -27,8 +37,20 @@ try:
 except KeyError:
     CL_ENV['LIB'] = LIB
 
-CL_DIR = os.path.dirname(cl_path)
 
-def run(args):
-    args[0] = os.path.join(CL_DIR, args[0])
-    return subprocess.run(args, env=CL_ENV).returncode
+def shim_and_exit(args):
+    bin_path = pathlib.PurePath(args[0])
+    bin_path = pathlib.Path(cl_path).parent / bin_path.name
+    args[0] = str(bin_path)
+
+    try:
+        p = subprocess.run(args, env=CL_ENV)
+    except FileNotFoundError:
+        exit_missing_file(args[0])
+
+    exit(p.returncode)
+
+
+if __name__ == '__main__':
+    (_, *args) = sys.argv
+    shim_and_exit(args)

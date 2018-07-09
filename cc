@@ -2,10 +2,7 @@
 assert __name__ == '__main__'
 
 import clcc
-
-import subprocess
 import sys
-
 
 args = ['cl', '-nologo']
 for x in sys.argv[1:]:
@@ -15,4 +12,4 @@ for x in sys.argv[1:]:
 
     args.append(x)
 
-exit(clcc.run(args))
+clcc.shim_and_exit(args)
